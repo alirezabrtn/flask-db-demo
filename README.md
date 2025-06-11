@@ -55,4 +55,4 @@ You can also create a `.env` file in the root of your project and add your Envir
 - [x] Add Prometheus support with basic system health metrics
 - [x] Dockerize the project
 - [x] Add Postgres with docker-compose
-- [ ] Fix Dockerfile db init issue
+- [x] Fix Dockerfile db init issue
