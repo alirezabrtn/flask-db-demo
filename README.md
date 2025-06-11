@@ -53,4 +53,4 @@ You can also create a `.env` file in the root of your project and add your Envir
 
 # Tasks
 - [x] Add Prometheus support with basic system health metrics
-- [ ] Dockerize the project
+- [x] Dockerize the project
