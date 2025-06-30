@@ -2,7 +2,33 @@ from app import app, db
 from flask import render_template, request, redirect, url_for, flash
 from .models import User
 from .forms import UserForm
+from prometheus_client import Gauge, generate_latest, CONTENT_TYPE_LATEST
+import psutil
 
+# Define basic system health metrics
+cpu_usage = Gauge('system_cpu_usage_percent', 'Current CPU usage percentage')
+memory_usage = Gauge('system_memory_usage_percent', 'Current memory usage percentage')
+disk_usage = Gauge('system_disk_usage_percent', 'Current disk usage percentage')
+
+def update_system_metrics():
+    """Update system metrics with current values"""
+    # CPU usage
+    cpu_usage.set(psutil.cpu_percent(interval=1))
+    
+    # Memory usage
+    memory = psutil.virtual_memory()
+    memory_usage.set(memory.percent)
+    
+    # Disk usage (root filesystem)
+    disk = psutil.disk_usage('/')
+    disk_percent = (disk.used / disk.total) * 100
+    disk_usage.set(disk_percent)
+
+@app.route('/metrics')
+def metrics():
+    """Prometheus metrics endpoint"""
+    update_system_metrics()
+    return generate_latest(), 200, {'Content-Type': CONTENT_TYPE_LATEST}
 
 ###
 # Routing for your application.
